@@ -4,16 +4,14 @@ import android.app.Application
 import androidx.work.Configuration
 import androidx.work.WorkManager
 
-class BalanceApp : Application(), Configuration.Provider {
-
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setMinimumLoggingLevel(android.util.Log.INFO)
-            .build()
+class BalanceApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // 手动初始化 WorkManager
-        WorkManager.initialize(this, workManagerConfiguration)
+        // 自定义 WorkManager 配置
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.INFO)
+            .build()
+        WorkManager.initialize(this, config)
     }
 }
