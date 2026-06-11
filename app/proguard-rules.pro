@@ -1,0 +1,3 @@
+-keep class com.deepseek.balance.model.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
