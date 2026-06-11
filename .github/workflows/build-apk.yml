@@ -38,11 +38,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 5️⃣ 授权 Gradle 执行权限
-      - name: 🔑 Grant execute permission
-        run: chmod +x gradlew
+      # 5️⃣ 安装 Gradle 并生成 wrapper（防止 gradlew 缺失）
+      - name: 🔧 Install Gradle & Setup Wrapper
+        run: |
+          # 如果 gradlew 不存在，通过 Gradle 生成 wrapper
+          if [ ! -f "gradlew" ]; then
+            echo "⚠️ gradlew 未找到，正在安装 Gradle 并生成..."
+            # 安装 SDKMAN
+            curl -s "https://get.sdkman.io" | bash
+            source "$HOME/.sdkman/bin/sdkman-init.sh"
+            # 安装 Gradle 8.9
+            sdk install gradle 8.9
+            # 生成 Gradle Wrapper
+            gradle wrapper --gradle-version 8.9
+            echo "✅ Wrapper 已生成"
+          fi
+          chmod +x gradlew
 
-      # 6️⃣ 构建 Debug APK（64位）
+      # 6️⃣ 构建 Debug APK
       - name: 🏗️ Build Debug APK
         run: ./gradlew assembleDebug
 
